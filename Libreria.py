@@ -168,7 +168,7 @@ def Graficar(BOLIVIA_var, ECUADOR_var, FRANCIA_var,JAPAN_var, SRILANKA_var, USA_
     
     ventana.mainloop()
 
-def tabla (Min, Max, Start, Stop, Var): #Funcion para crear la tabla basada en 
+def tabla (sheet, Min, Max, Start, Stop, Var): #Funcion para crear la tabla basada en 
                                         #en los datos del archivo de Excel
                                         #Variables:Primera Fila, Ultima Fila
                                         #Primera Columna, Ultima Columna,
@@ -303,7 +303,7 @@ con los elementos reducidos a 2 dimensiones.
 por ultimo se analiza la variable de discrimizacion para graficar cada elemento
 en un eje de coordenadas y marcar los centros de los clusters identificados.
 """
-def Procesamiento (Min, Max, Start, Stop, Var, Dim, Clu, Gra, Des): #Funcion principal, Variables:
+def Procesamiento (sheet, Min, Max, Start, Stop, Var, Dim, Clu, Gra, Des): #Funcion principal, Variables:
                                                 #Variables:Primera Fila,
                                                 #Ultima Fila, Primera Columna,
                                                 #Ultima Columna,
@@ -314,7 +314,7 @@ def Procesamiento (Min, Max, Start, Stop, Var, Dim, Clu, Gra, Des): #Funcion pri
     plt.figure()
     x = Var             #x asume el valor de la variable
     
-    Tabla, N = tabla(Min, Max, Start, Stop, x)  #Llama a la funcion tabla y 
+    Tabla, N = tabla(sheet, Min, Max, Start, Stop, x)  #Llama a la funcion tabla y 
                                                 #almacena la Matriz en Tabla 
                                                 #y la variable en N
     min_max_scaler = preprocessing.MinMaxScaler()
