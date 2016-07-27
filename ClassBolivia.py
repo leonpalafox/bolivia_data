@@ -1,9 +1,12 @@
 #Analysis of data with pandas
 import pandas as pd
 import numpy as np
-from sklearn.manifold import TSNE
+from sklearn.linear_model import ElasticNet
+from sklearn import metrics
+from sklearn.cross_validation import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn import linear_model
 import pylab as plt
-import sys
 database = pd.read_csv('base.csv')
 rows, col = database.shape
 #This step cleans the data
@@ -29,27 +32,20 @@ for country in database.BCountry.unique():
 
 rows, col = database.shape
 database = database.reset_index(drop = True)
-class_label = database.RTime > 20
+class_label = database.HouseholdSize > 2
 class_label = class_label.astype(int)
-database['Classes'] = pd.Series(class_label)
-#create color index
-variable_to_plot = 'BCountry'
-color_index = pd.get_dummies(database[variable_to_plot]).values.argmax(1) #for countries
-#make dict index to country
-name_to_index = pd.get_dummies(database[variable_to_plot]).keys()
-NUM_COLORS = len(np.unique(color_index))
-cm = plt.cm.get_cmap('gist_rainbow')
-sys.exit()
- 
+
+
  #analyze red variables
  #index 28 - > 36      
 sub_data = database.iloc[:,28:37]
-sub_data = database.iloc[:,37:67]
 data_matrix = sub_data.values
-model = TSNE(n_components=2, random_state=0)
-fig = plt.figure()
-ax = fig.add_subplot(111)
-projected =  model.fit_transform(data_matrix) 
-for idx in np.unique(color_index):
-    ax.scatter(projected[color_index == idx, 0], projected[color_index == idx, 1], c = cm(1.*idx/NUM_COLORS), label = name_to_index[idx])
-plt.legend()
+X_train, X_test, y_train, y_test = train_test_split(data_matrix, class_label.values, test_size=0.33, random_state=42)
+regr = linear_model.ElasticNetCV(l1_ratio = np.linspace(0.001,1,300))
+#extract classes
+clf_l1_LR = linear_model.LogisticRegression(C=100, penalty='l1', tol=0.01)
+clf_l2_LR = linear_model.LogisticRegression(C=100, penalty='l2', tol=0.01)
+clf_l1_LR.fit(X_train, y_train)
+clf_l2_LR.fit(X_train, y_train)
+print clf_l1_LR.score(X_test, y_test)
+print clf_l2_LR.score(X_test, y_test)
